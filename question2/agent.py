@@ -30,9 +30,7 @@ class TicketResolution:
     kb_article: str
 
 
-# --------------------------------------------------------------------------- #
-# Retrieval index: BM25 over the real help-center articles
-# --------------------------------------------------------------------------- #
+
 
 _STOPWORDS = frozenset(
     "a an and are as at be by for from has have i in is it its me my of on or our "
@@ -41,8 +39,7 @@ _STOPWORDS = frozenset(
 
 
 def _terms(text: str) -> list[str]:
-    # Truncating to 6 chars is a cheap stemmer: damage/damaged, replace/replacement,
-    # refund/refundable, custom/customized all collapse to one term.
+   
     words = re.findall(r"[a-z0-9]+", text.lower())
     return [w[:6] for w in words if w not in _STOPWORDS]
 
@@ -81,7 +78,7 @@ def _index() -> ArticleIndex:
     return ArticleIndex()
 
 
-# Order field -> the vocabulary a help-center article would use for it.
+
 _FACT_TERMS = {
     ("product_type", "subscription"): "subscription cancelled prorated",
     ("product_type", "digital"): "digital license download",
@@ -109,9 +106,7 @@ class Triage:
     query: str
 
 
-# --------------------------------------------------------------------------- #
-# Pipeline
-# --------------------------------------------------------------------------- #
+
 
 class SupportPipeline:
     """
@@ -167,9 +162,9 @@ class SupportPipeline:
         try:
             res = parse_resolution(draft)
         except (ValueError, KeyError, json.JSONDecodeError):
-            # Unreadable output: nothing to trust, route to a human with our best article.
+           
             return _FullResolution("ESCALATE_TIER2", retrieved[0] if retrieved else "", "", draft)
-        known = set(retrieved)  # citing a policy the model was never shown is a red flag
+        known = set(retrieved)  
         final, _problems = apply_guardrails(res, order, known)
         return final
 
