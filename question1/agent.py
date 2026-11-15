@@ -18,7 +18,7 @@ _DEFAULT_REPLY = {
     "ESCALATE_TIER2": "A specialist will review your case and follow up.",
 }
 
-# Identifiers carry no policy signal, so they never need to reach the model.
+
 _IDENTIFIER_FIELDS = ("order_id", "sku", "title")
 
 
@@ -44,9 +44,7 @@ def parse_resolution(text: str) -> TicketResolution:
     )
 
 
-# --------------------------------------------------------------------------- #
-# Prompt pieces (shared with question2)
-# --------------------------------------------------------------------------- #
+
 
 SYSTEM_HEADER = (
     "You are ShopAssist, a Tier-1 e-commerce support router. "
@@ -77,9 +75,7 @@ def render_case(thread: str, order: dict) -> str:
     return f"THREAD:\n{thread}\nORDER_SNAPSHOT:\n{order_facts(order)}\nEND_SNAPSHOT"
 
 
-# --------------------------------------------------------------------------- #
-# Guardrails (zero-token): the model routes, code vetoes unsafe auto-approvals
-# --------------------------------------------------------------------------- #
+
 
 def guardrail_violations(order: dict, action: str, article: str, known: set[str]) -> list[str]:
     """Reasons a model decision must not be auto-executed.
@@ -136,9 +132,7 @@ def apply_guardrails(
     )
 
 
-# --------------------------------------------------------------------------- #
-# Question 1 agent
-# --------------------------------------------------------------------------- #
+
 
 class SupportCopilot:
     """
